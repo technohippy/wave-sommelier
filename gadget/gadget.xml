@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Wave Sommelier Gadget" height="200" scrolling="true">
+    <Require feature="wave" /> 
+    <Require feature="dynamic-height" /> 
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+    <script>
+      function extend(key) {
+        var state = wave.getState();
+        state.submitDelta({'extend':key});
+      }
+
+      function getPair(key) {
+        var elm = document.getElementById(key);
+        var value;
+        if (elm.type == 'checkbox') {
+          value = elm.checked ? '1' : '0';
+        }
+        else {
+          //value = escape(elm.value);
+          value = elm.value;
+        }
+        return key + '=' + value;
+      }
+      
+      function search() {
+        var keywords = document.getElementById('keywords');
+        var gadget = document.getElementById('gadget');
+        var robot = document.getElementById('robot');
+        var javascript = document.getElementById('javascript');
+        var python = document.getElementById('python');
+        var java = document.getElementById('java');
+
+        var baseUrl = 'http://wave-sommelier.appspot.com/search'
+        var apis = [];
+        if (gadget.checked) apis.push('Gadgets');
+        if (robot.checked) apis.push('Robots');
+        var langs = [];
+        if (javascript.checked) langs.push('JavaScript');
+        if (python.checked) langs.push('Python');
+        if (java.checked) langs.push('Java');
+        var url = baseUrl + 
+          '?keywords=' + keywords.value +
+          '&apis=' + apis.join(',') +
+          '&langs=' + langs.join(',');
+
+        _IG_FetchContent(url, function(content) {
+          document.getElementById('results').innerHTML = content;
+          gadgets.window.adjustHeight();
+        });
+
+        gadgets.util.registerOnLoadHandler(function() {
+          gadgets.window.adjustHeight();
+        }); 
+      }
+    </script>
+    <div style="padding:5px;">
+      <h3>Search extensions for you</h3>
+      <div style="float:left">
+        <label for="keywords">Keywords:</lable><input id="keywords"></input><br />
+      </div>
+      <button onclick="javascript:search()" style="clear:both;">Search</button>
+      <div style="border:1px solid black; margin:2px; padding:5px;">
+        <label for="gadget">Gadget:</label><input id="gadget" type="checkbox" checked="true"></input>
+        <label for="robot">Robot:</label><input id="robot" type="checkbox" checked="true"></input>
+      </div>
+      <div style="border:1px solid black; margin:2px; padding:5px;">
+        <label for="javascript">JavaScript:</label><input id="javascript" type="checkbox" checked="true"></input>
+        <label for="python">Python:</label><input id="python" type="checkbox" checked="true"></input>
+        <label for="java">Java:</label><input id="java" type="checkbox" checked="true"></input>
+      </div>
+    </div>
+    <div id="results"></div>
+    ]]>
+  </Content>
+</Module>
+

@@ -1,0 +1,85 @@
+<html>
+<head>
+  <script>
+    function _IG_FetchContent(url, callback) {
+      var ajax = new XMLHttpRequest();
+      ajax.open('GET', url, true);
+      ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+          if (ajax.status == 200) {
+            callback(ajax.responseText);
+          }
+          else {
+            alert('error:' + ajax.status);
+          }
+        }
+      };
+      ajax.send(null);
+    }
+
+    function extend(key) {
+      var state = wave.getState();
+      state.submitDelta({'extend':key});
+    }
+
+    function getPair(key) {
+      var elm = document.getElementById(key);
+      var value;
+      if (elm.type == 'checkbox') {
+        value = elm.checked ? '1' : '0';
+      }
+      else {
+        //value = escape(elm.value);
+        value = elm.value;
+      }
+      return key + '=' + value;
+    }
+    
+    function search() {
+      var keywords = document.getElementById('keywords');
+      var gadget = document.getElementById('gadget');
+      var robot = document.getElementById('robot');
+      var javascript = document.getElementById('javascript');
+      var python = document.getElementById('python');
+      var java = document.getElementById('java');
+
+      //var baseUrl = 'http://wave-sommelier.appspot.com/search'
+      var baseUrl = '/search'
+      var apis = [];
+      if (gadget.checked) apis.push('Gadgets');
+      if (robot.checked) apis.push('Robots');
+      var langs = [];
+      if (javascript.checked) langs.push('JavaScript');
+      if (python.checked) langs.push('Python');
+      if (java.checked) langs.push('Java');
+      var url = baseUrl + 
+        '?keywords=' + keywords.value +
+        '&apis=' + apis.join(',') +
+        '&langs=' + langs.join(',');
+
+      _IG_FetchContent(url, function(content) {
+        document.getElementById('results').innerHTML = content;
+        gadgets.window.adjustHeight();
+      });
+    }
+  </script>
+</head>
+<body>
+  Robot ID is: wave-sommelier@appspot.com
+  <div style="padding:5px;">
+    <h3>Search extensions for you</h3>
+    <label for="keywords">Keywords:</lable><input id="keywords"></input><br />
+    <div style="border:1px solid black; margin:5px; padding:5px; float:left">
+      <label for="gadget">Gadget:</label><input id="gadget" type="checkbox" checked="true"></input>
+      <label for="robot">Robot:</label><input id="robot" type="checkbox" checked="true"></input>
+    </div>
+    <div style="border:1px solid black; margin:5px; padding:5px;">
+      <label for="javascript">JavaScript:</label><input id="javascript" type="checkbox" checked="true"></input>
+      <label for="python">Python:</label><input id="python" type="checkbox" checked="true"></input>
+      <label for="java">Java:</label><input id="java" type="checkbox" checked="true"></input>
+    </div>
+    <button onclick="javascript:search()" style="clear:both;">Search</button>
+  </div>
+  <div id="results"></div>
+</body>
+</html>

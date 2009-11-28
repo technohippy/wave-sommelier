@@ -1,0 +1,9 @@
+{% for extension in extensions %}
+  <div style="font:small; border-top:1px dotted gray; margin-top:10px; padding-top:5px;">
+    <img src="{{ extension.imageUrl }}" style="float:left; margin:5px;" width="50" height="50" />
+    <strong>[{{ extension.type }}] {{ extension.title }}</strong>
+    {% if extension.desc %}<p>{{ extension.desc }}</p>{% endif %}
+    {% if extension.techDesc %}<p>{{ extension.techDesc }}</p>{% endif %}
+    <div style="text-align:center"><button onclick="javascript:extend('{{ extension.key }}')" style="width:50%">Use</button></div>
+  </div>
+{% endfor %}
